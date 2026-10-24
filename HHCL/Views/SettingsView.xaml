@@ -1,0 +1,260 @@
+<UserControl x:Class="HHCL.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="Transparent">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="28,20,24,20">
+            <TextBlock Text="设置" Style="{StaticResource H1}" />
+            <TextBlock Text="修改后立即生效，保存在 %APPDATA%\HHCL\config.json。" Style="{StaticResource Sub}" />
+
+            <!-- 游戏 -->
+            <Border Style="{StaticResource Card}" Margin="0,18,0,0" Padding="20,16">
+                <StackPanel>
+                    <TextBlock Text="游戏" Style="{StaticResource H2}" FontSize="14" />
+
+                    <Grid Margin="0,14,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="150" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="游戏目录" Style="{StaticResource Body}" VerticalAlignment="Center" />
+                        <Grid Grid.Column="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="DirBox" Style="{StaticResource FluentTextBox}" Height="32" Tag=".minecraft 路径"
+                                     LostFocus="DirBox_LostFocus" />
+                            <Button Grid.Column="1" Content="浏览…" Style="{StaticResource SubtleButton}" Height="32" Margin="8,0,0,0" Click="BrowseDir_Click" />
+                            <Button Grid.Column="2" Content="打开" Style="{StaticResource SubtleButton}" Height="32" Margin="8,0,0,0" Click="OpenDir_Click" />
+                        </Grid>
+                    </Grid>
+
+                    <Border Style="{StaticResource Divider}" />
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="150" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="版本隔离" Style="{StaticResource Body}" VerticalAlignment="Center" />
+                        <StackPanel Grid.Column="1">
+                            <CheckBox x:Name="IsolateCheck" Style="{StaticResource FluentSwitch}" Content="每个版本使用独立目录"
+                                      Checked="Isolate_Changed" Unchecked="Isolate_Changed" />
+                            <TextBlock Text="开启时，模组、存档、配置都放在 versions\版本名\ 里，互不干扰（PCL2 的默认行为）。关闭则全部共用 .minecraft 根目录。"
+                                       Style="{StaticResource Label}" TextWrapping="Wrap" Margin="0,8,0,0" />
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- 内存与窗口 -->
+            <Border Style="{StaticResource Card}" Margin="0,14,0,0" Padding="20,16">
+                <StackPanel>
+                    <TextBlock Text="内存与窗口" Style="{StaticResource H2}" FontSize="14" />
+
+                    <Grid Margin="0,14,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="150" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="最大内存" Style="{StaticResource Body}" VerticalAlignment="Center" />
+                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <TextBox x:Name="MemMaxBox" Style="{StaticResource FluentTextBox}" Width="110" Height="32" Tag="8192" LostFocus="MemMax_LostFocus" />
+                            <TextBlock Text="MB" Style="{StaticResource Label}" VerticalAlignment="Center" Margin="8,0,0,0" />
+                            <TextBlock x:Name="MemSuggest" Text="" Style="{StaticResource Label}" VerticalAlignment="Center" Margin="14,0,0,0" />
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid Margin="0,10,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="150" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="最小内存" Style="{StaticResource Body}" VerticalAlignment="Center" />
+                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <TextBox x:Name="MemMinBox" Style="{StaticResource FluentTextBox}" Width="110" Height="32" Tag="1024" LostFocus="MemMin_LostFocus" />
+                            <TextBlock Text="MB" Style="{StaticResource Label}" VerticalAlignment="Center" Margin="8,0,0,0" />
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid Margin="0,10,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="150" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="窗口大小" Style="{StaticResource Body}" VerticalAlignment="Center" />
+                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <TextBox x:Name="WidthBox" Style="{StaticResource FluentTextBox}" Width="90" Height="32" Tag="1280" LostFocus="Size_LostFocus" />
+                            <TextBlock Text="×" Style="{StaticResource Label}" VerticalAlignment="Center" Margin="8,0" />
+                            <TextBox x:Name="HeightBox" Style="{StaticResource FluentTextBox}" Width="90" Height="32" Tag="720" LostFocus="Size_LostFocus" />
+                            <TextBlock Text="像素" Style="{StaticResource Label}" VerticalAlignment="Center" Margin="8,0,0,0" />
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid Margin="0,10,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="150" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="额外 JVM 参数" Style="{StaticResource Body}" VerticalAlignment="Center" />
+                        <TextBox x:Name="JvmBox" Grid.Column="1" Style="{StaticResource FluentTextBox}" Height="32"
+                                 Tag="-XX:+UseG1GC -Dfile.encoding=UTF-8" LostFocus="Jvm_LostFocus" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Java -->
+            <Border Style="{StaticResource Card}" Margin="0,14,0,0" Padding="20,16">
+                <StackPanel>
+                    <TextBlock Text="Java 运行时" Style="{StaticResource H2}" FontSize="14" />
+
+                    <Grid Margin="0,14,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="150" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="使用 Java" Style="{StaticResource Body}" VerticalAlignment="Center" />
+                        <Grid Grid.Column="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <ComboBox x:Name="JavaBox" Style="{StaticResource FluentComboBox}" Height="32" DisplayMemberPath="Display"
+                                      SelectionChanged="JavaBox_SelectionChanged" />
+                            <Button Grid.Column="1" Content="重新检测" Style="{StaticResource SubtleButton}" Height="32" Margin="8,0,0,0" Click="RescanJava_Click" />
+                        </Grid>
+                    </Grid>
+
+                    <Grid Margin="0,10,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="150" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="安装 Java" Style="{StaticResource Body}" VerticalAlignment="Center" />
+                        <StackPanel Grid.Column="1">
+                            <StackPanel Orientation="Horizontal">
+                                <Button x:Name="Jdk25Btn" Content="下载 Java 25" Style="{StaticResource SubtleButton}" Height="32" Click="InstallJava25_Click" />
+                                <Button x:Name="Jdk21Btn" Content="下载 Java 21" Style="{StaticResource SubtleButton}" Height="32" Margin="8,0,0,0" Click="InstallJava21_Click" />
+                                <Button x:Name="Jdk17Btn" Content="下载 Java 17" Style="{StaticResource SubtleButton}" Height="32" Margin="8,0,0,0" Click="InstallJava17_Click" />
+                                <TextBlock x:Name="JavaBarText" Text="" Style="{StaticResource Label}" VerticalAlignment="Center" Margin="12,0,0,0" />
+                            </StackPanel>
+                            <ProgressBar x:Name="JavaBar" Style="{StaticResource FluentProgress}" Height="4" Margin="0,10,0,0"
+                                         Visibility="Collapsed" Maximum="100" />
+                            <TextBlock Text="1.20.5 及以上需要 Java 21，1.18～1.20.4 需要 Java 17。下载的是 Microsoft OpenJDK，解压到 %APPDATA%\HHCL\jdk。"
+                                       Style="{StaticResource Label}" TextWrapping="Wrap" Margin="0,8,0,0" />
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- 下载与启动 -->
+            <Border Style="{StaticResource Card}" Margin="0,14,0,0" Padding="20,16">
+                <StackPanel>
+                    <TextBlock Text="下载与启动" Style="{StaticResource H2}" FontSize="14" />
+
+                    <Grid Margin="0,14,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="150" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="下载源" Style="{StaticResource Body}" VerticalAlignment="Center" />
+                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <ComboBox x:Name="SourceBox" Style="{StaticResource FluentComboBox}" Width="170" Height="32" SelectionChanged="SourceBox_SelectionChanged">
+                                <ComboBoxItem Content="BMCLAPI 镜像（国内快）" Tag="bmclapi" />
+                                <ComboBoxItem Content="Mojang 官方" Tag="mojang" />
+                            </ComboBox>
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid Margin="0,12,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="150" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="启动后" Style="{StaticResource Body}" VerticalAlignment="Center" />
+                        <StackPanel Grid.Column="1">
+                            <CheckBox x:Name="MinimizeCheck" Style="{StaticResource FluentSwitch}" Content="最小化启动器窗口"
+                                      Checked="Minimize_Changed" Unchecked="Minimize_Changed" />
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid Margin="0,12,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="150" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="游戏语言" Style="{StaticResource Body}" VerticalAlignment="Center" />
+                        <StackPanel Grid.Column="1">
+                            <CheckBox x:Name="ChineseLangCheck" Style="{StaticResource FluentSwitch}" Content="启动前自动切换为简体中文"
+                                      Checked="ChineseLang_Changed" Unchecked="ChineseLang_Changed" />
+                            <TextBlock Text="自动把游戏 options.txt 的 lang 改成 zh_cn，进游戏就是中文界面。"
+                                       Style="{StaticResource Label}" Margin="0,6,0,0" TextWrapping="Wrap" />
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- 外观 -->
+            <Border Style="{StaticResource Card}" Margin="0,14,0,0" Padding="20,16">
+                <StackPanel>
+                    <TextBlock Text="外观" Style="{StaticResource H2}" FontSize="14" />
+                    <TextBlock Text="界面配色，选完立刻生效。" Style="{StaticResource Label}" Margin="0,6,0,0" TextWrapping="Wrap" />
+
+                    <Grid Margin="0,12,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="150" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="主题" Style="{StaticResource Body}" VerticalAlignment="Center" />
+                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <RadioButton x:Name="ThemeDark" Style="{StaticResource SegmentItem}" GroupName="Theme"
+                                         Content="深色（黑）" MinWidth="130" Checked="Theme_Changed" />
+                            <RadioButton x:Name="ThemeLight" Style="{StaticResource SegmentItem}" GroupName="Theme"
+                                         Content="浅色（白）" MinWidth="130" Margin="14,0,0,0" Checked="Theme_Changed" />
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- 在线资源 -->
+            <Border Style="{StaticResource Card}" Margin="0,14,0,0" Padding="20,16">
+                <StackPanel>
+                    <TextBlock Text="在线资源" Style="{StaticResource H2}" FontSize="14" />
+                    <TextBlock Text="模组页默认搜 Modrinth（不用 key）。想搜 CurseForge（模组更多）需要填一个免费的 API Key。"
+                               Style="{StaticResource Label}" Margin="0,6,0,0" TextWrapping="Wrap" />
+
+                    <Grid Margin="0,12,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="150" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="CurseForge Key" Style="{StaticResource Body}" VerticalAlignment="Center" />
+                        <TextBox x:Name="CfKeyBox" Grid.Column="1" Style="{StaticResource FluentTextBox}" Height="32"
+                                 Tag="留空就只用 Modrinth" />
+                        <Button Grid.Column="2" Content="申请" Style="{StaticResource SubtleButton}" Height="32" Margin="8,0,0,0"
+                                Click="OpenCfKey_Click" ToolTip="打开 CurseForge 控制台申请免费 API Key" />
+                    </Grid>
+
+                    <Button Content="保存 Key" Style="{StaticResource AccentButton}" Height="32" Margin="150,10,0,0"
+                            HorizontalAlignment="Left" Padding="20,0" Click="SaveCfKey_Click" />
+                    <TextBlock x:Name="CfHint" Text="" Style="{StaticResource Label}" Margin="0,8,0,0" TextWrapping="Wrap" />
+                </StackPanel>
+            </Border>
+
+            <!-- 关于 -->
+            <Border Style="{StaticResource Card}" Margin="0,14,0,0" Padding="20,16">
+                <StackPanel>
+                    <TextBlock Text="关于" Style="{StaticResource H2}" FontSize="14" />
+                    <TextBlock x:Name="AboutText" Style="{StaticResource Body}" Margin="0,10,0,0" TextWrapping="Wrap" LineHeight="20" />
+                    <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                        <Button Content="打开配置目录" Style="{StaticResource SubtleButton}" Height="30" Click="OpenConfig_Click" />
+                        <Button Content="查看崩溃日志" Style="{StaticResource GhostButton}" Height="30" Margin="8,0,0,0" Click="OpenCrash_Click" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

@@ -1,0 +1,172 @@
+<UserControl x:Class="HHCL.Views.HomeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="Transparent">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="28,20,24,20">
+
+            <TextBlock Text="启动游戏" Style="{StaticResource H1}" />
+            <TextBlock Text="选好版本，点一下就开始。" Style="{StaticResource Sub}" />
+
+            <!-- 主卡片 -->
+            <Border Style="{StaticResource Card}" Background="{DynamicResource HeroGradientBrush}" Margin="0,18,0,0" Padding="24,22">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel>
+                        <TextBlock Text="当前版本" Style="{StaticResource Label}" />
+                        <ComboBox x:Name="VersionBox" Style="{StaticResource FluentComboBox}" Width="330" Height="38"
+                                  HorizontalAlignment="Left" Margin="0,8,0,0" DisplayMemberPath="Id"
+                                  SelectionChanged="VersionBox_SelectionChanged" />
+
+                        <StackPanel Orientation="Horizontal" Margin="0,14,0,0">
+                            <Border Background="{DynamicResource OverlaySoftBrush}" CornerRadius="4" Padding="9,4" Margin="0,0,8,0">
+                                <TextBlock x:Name="MetaMc" Text="—" FontSize="11.5" Foreground="{DynamicResource TextSecondaryBrush}" />
+                            </Border>
+                            <Border Background="{DynamicResource OverlaySoftBrush}" CornerRadius="4" Padding="9,4" Margin="0,0,8,0">
+                                <TextBlock x:Name="MetaLoader" Text="原版" FontSize="11.5" Foreground="{DynamicResource TextSecondaryBrush}" />
+                            </Border>
+                            <Border Background="{DynamicResource OverlaySoftBrush}" CornerRadius="4" Padding="9,4">
+                                <TextBlock x:Name="MetaJava" Text="Java —" FontSize="11.5" Foreground="{DynamicResource TextSecondaryBrush}" />
+                            </Border>
+                        </StackPanel>
+
+                        <TextBlock x:Name="HintText" Text="" Style="{StaticResource Body}" Margin="0,12,0,0" TextWrapping="Wrap"
+                                   Foreground="{DynamicResource DangerBrush}" Visibility="Collapsed" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" VerticalAlignment="Bottom" Margin="20,0,0,0">
+                        <Button x:Name="PlayBtn" Style="{StaticResource AccentButton}" Width="166" Height="40" Click="Play_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock x:Name="PlayGlyph" Text="&#xE768;" FontFamily="{StaticResource IconFont}" FontSize="15"
+                                           VerticalAlignment="Center" Margin="0,0,10,0" />
+                                <TextBlock x:Name="PlayText" Text="启动游戏" FontSize="14" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Button>
+                        <TextBlock x:Name="PlaySub" Text="" Style="{StaticResource Label}" HorizontalAlignment="Center" Margin="0,8,0,0" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- 三张信息卡 -->
+            <Grid Margin="0,14,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="14" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="14" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Border Style="{StaticResource Card}" Padding="16,14">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE943;" FontFamily="{StaticResource IconFont}" FontSize="14"
+                                       Foreground="{DynamicResource AccentLightBrush}" VerticalAlignment="Center" />
+                            <TextBlock Text="Java 运行时" Style="{StaticResource Label}" Margin="8,0,0,0" VerticalAlignment="Center" />
+                        </StackPanel>
+                        <TextBlock x:Name="JavaValue" Text="—" FontSize="15" FontWeight="SemiBold" Margin="0,8,0,0" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                        <TextBlock x:Name="JavaSub" Text="" Style="{StaticResource Label}" Margin="0,3,0,0" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="2" Style="{StaticResource Card}" Padding="16,14">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE950;" FontFamily="{StaticResource IconFont}" FontSize="14"
+                                       Foreground="{DynamicResource AccentLightBrush}" VerticalAlignment="Center" />
+                            <TextBlock Text="内存上限" Style="{StaticResource Label}" Margin="8,0,0,0" VerticalAlignment="Center" />
+                        </StackPanel>
+                        <TextBlock x:Name="MemValue" Text="—" FontSize="15" FontWeight="SemiBold" Margin="0,8,0,0" />
+                        <TextBlock x:Name="MemSub" Text="" Style="{StaticResource Label}" Margin="0,3,0,0" />
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="4" Style="{StaticResource Card}" Padding="16,14">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE8F1;" FontFamily="{StaticResource IconFont}" FontSize="14"
+                                       Foreground="{DynamicResource AccentLightBrush}" VerticalAlignment="Center" />
+                            <TextBlock Text="本地版本" Style="{StaticResource Label}" Margin="8,0,0,0" VerticalAlignment="Center" />
+                        </StackPanel>
+                        <TextBlock x:Name="VerValue" Text="—" FontSize="15" FontWeight="SemiBold" Margin="0,8,0,0" />
+                        <TextBlock x:Name="VerSub" Text="" Style="{StaticResource Label}" Margin="0,3,0,0" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- 日志 -->
+                        <!-- 基岩版（原独立页面，已并到启动页） -->
+            <Border Style="{StaticResource Card}" Margin="0,14,0,0" Padding="18,16">
+                <StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE7F8;" FontFamily="{StaticResource IconFont}" FontSize="14"
+                                       Foreground="{DynamicResource AccentLightBrush}" VerticalAlignment="Center" />
+                            <TextBlock Text="Minecraft 基岩版" FontSize="14" FontWeight="SemiBold"
+                                       Margin="8,0,0,0" VerticalAlignment="Center" />
+                            <Border Background="{DynamicResource OverlaySoftBrush}" CornerRadius="3" Padding="6,2" Margin="10,0,0,0"
+                                    VerticalAlignment="Center">
+                                <TextBlock x:Name="BedrockStateText" Text="检测中" FontSize="10.5"
+                                           Foreground="{DynamicResource TextSecondaryBrush}" />
+                            </Border>
+                        </StackPanel>
+                        <TextBlock Grid.Column="1" x:Name="BedrockVersionText" Style="{StaticResource Label}"
+                                   VerticalAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" MaxWidth="320" />
+                    </Grid>
+
+                    <TextBlock x:Name="BedrockHint" Text="" Style="{StaticResource Label}" Margin="0,10,0,0"
+                               TextWrapping="Wrap" />
+
+                    <StackPanel Orientation="Horizontal" Margin="0,14,0,0">
+                        <Button x:Name="BedrockPrimaryBtn" Style="{StaticResource AccentButton}" Height="34" Width="142" FontSize="13"
+                                Content="启动基岩版" Click="BedrockPrimary_Click" />
+                        <Button x:Name="BedrockSecondaryBtn" Style="{StaticResource GhostButton}" Height="34" Width="132" FontSize="13"
+                                Margin="10,0,0,0" Content="安装 / 更新" Click="BedrockInstall_Click" />
+                        <Button x:Name="BedrockManageBtn" Style="{StaticResource GhostButton}" Height="34" Width="132" FontSize="13"
+                                Margin="10,0,0,0" Content="配置与模组" Click="BedrockManage_Click" />
+                        <Button x:Name="BedrockCancelBtn" Style="{StaticResource GhostButton}" Height="34" Width="82" FontSize="13"
+                                Margin="10,0,0,0" Content="取消" Visibility="Collapsed" Click="BedrockCancel_Click" />
+                    </StackPanel>
+
+                    <ProgressBar x:Name="BedrockBar" Style="{StaticResource FluentProgress}" Height="5"
+                                 Margin="0,14,0,0" Visibility="Collapsed" />
+                    <TextBlock x:Name="BedrockProgressText" Text="" Style="{StaticResource Label}" Margin="0,8,0,0"
+                               TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                </StackPanel>
+            </Border>
+
+<Border Style="{StaticResource Card}" Margin="0,14,0,0" Padding="18,14">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="运行日志" Style="{StaticResource H2}" FontSize="14" VerticalAlignment="Center" />
+                            <TextBlock x:Name="LogState" Text="等待启动" Style="{StaticResource Label}" Margin="10,0,0,0" VerticalAlignment="Center" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button Content="打开日志文件夹" Style="{StaticResource GhostButton}" Height="28" FontSize="12" Click="OpenLogDir_Click" />
+                            <Button Content="清空" Style="{StaticResource GhostButton}" Height="28" FontSize="12" Margin="4,0,0,0" Click="ClearLog_Click" />
+                        </StackPanel>
+                    </Grid>
+                    <Border Grid.Row="1" Background="{DynamicResource StrokeSoftBrush}" CornerRadius="6" Margin="0,10,0,0" Padding="12,10">
+                        <TextBox x:Name="LogBox" IsReadOnly="True" Background="Transparent" BorderThickness="0"
+                                 FontFamily="{StaticResource MonoFont}" FontSize="11.5" Foreground="{DynamicResource TextSecondaryBrush}"
+                                 Height="196" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                                 TextWrapping="NoWrap" IsReadOnlyCaretVisible="False" Focusable="True" />
+                    </Border>
+                </Grid>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

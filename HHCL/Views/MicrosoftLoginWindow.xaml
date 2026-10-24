@@ -1,0 +1,74 @@
+<Window x:Class="HHCL.Views.MicrosoftLoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+        Title="登录微软账号" Height="420" Width="470" ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner" WindowStyle="None" Background="{DynamicResource BgBrush}"
+        UseLayoutRounding="True" SnapsToDevicePixels="True">
+
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome CaptionHeight="46" ResizeBorderThickness="0" GlassFrameThickness="0"
+                            CornerRadius="0" UseAeroCaptionButtons="False" />
+    </shell:WindowChrome.WindowChrome>
+
+    <Border Background="{DynamicResource WindowBgBrush}" BorderBrush="{DynamicResource StrokeBrush}" BorderThickness="1">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="46" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!-- 标题栏 -->
+            <Grid Grid.Row="0">
+                <TextBlock Text="登录微软账号" FontFamily="{StaticResource DisplayFont}" FontSize="13" FontWeight="SemiBold"
+                           Margin="18,0,0,0" VerticalAlignment="Center" />
+                <Button HorizontalAlignment="Right" Width="46" Height="46" shell:WindowChrome.IsHitTestVisibleInChrome="True"
+                        Style="{StaticResource GhostButton}" Click="Close_Click" ToolTip="关闭">
+                    <TextBlock Text="&#xE8BB;" FontFamily="{StaticResource IconFont}" FontSize="12" />
+                </Button>
+            </Grid>
+
+            <StackPanel Grid.Row="1" Margin="26,6,26,24">
+
+                <!-- 第一步：显示登录码 -->
+                <Border x:Name="CodePanel" Style="{StaticResource Card}" Padding="18,16">
+                    <StackPanel>
+                        <TextBlock Text="第 1 步：在浏览器里输入这个代码" Style="{StaticResource H2}" FontSize="14" />
+                        <TextBlock Text="打开下面的网址，输入代码并确认，然后回到这里等着就行。" Style="{StaticResource Label}"
+                                   Margin="0,6,0,0" TextWrapping="Wrap" />
+
+                        <Border Background="{DynamicResource CardHoverBrush}" CornerRadius="8" Padding="0,14" Margin="0,14,0,0">
+                            <TextBlock x:Name="UserCodeText" Text="······" FontFamily="{StaticResource DisplayFont}"
+                                       FontSize="30" FontWeight="Bold"
+                                       Foreground="{DynamicResource AccentLightBrush}"
+                                       HorizontalAlignment="Center" />
+                        </Border>
+
+                        <TextBlock x:Name="VerifyUrlText" Text="" Style="{StaticResource Label}" Margin="0,10,0,0"
+                                   HorizontalAlignment="Center" TextWrapping="Wrap" />
+
+                        <Button x:Name="OpenBtn" Content="打开网页（代码已复制到剪贴板）" Style="{StaticResource AccentButton}"
+                                Height="36" Margin="0,14,0,0" Click="Open_Click" />
+                    </StackPanel>
+                </Border>
+
+                <!-- 状态 -->
+                <Border Style="{StaticResource Card}" Padding="18,14" Margin="0,14,0,0">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock x:Name="StateIcon" Text="&#xE895;" FontFamily="{StaticResource IconFont}" FontSize="14"
+                                       Foreground="{DynamicResource AccentLightBrush}" VerticalAlignment="Center" />
+                            <TextBlock x:Name="StateText" Text="正在申请登录码…" Style="{StaticResource Body}" Margin="10,0,0,0"
+                                       VerticalAlignment="Center" TextWrapping="Wrap" />
+                        </StackPanel>
+                        <ProgressBar x:Name="Bar" Style="{StaticResource FluentProgress}" Height="4" Margin="0,12,0,0"
+                                     IsIndeterminate="True" />
+                    </StackPanel>
+                </Border>
+
+                <Button x:Name="CancelBtn" Content="取消" Style="{StaticResource GhostButton}" Height="34"
+                        Margin="0,14,0,0" Click="Close_Click" />
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>

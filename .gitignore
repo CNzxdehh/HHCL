@@ -1,0 +1,49 @@
+# ---------- 编译产物 ----------
+HHCL/bin/
+HHCL/obj/
+HHCL发布/
+HHCL-自包含版/
+HHCL-轻量版/
+分享给朋友/
+*.zip
+*.pdb
+
+# ---------- 测试用的游戏目录 / 数据 ----------
+.hhcl-test/
+.hhcl-test2/
+mp-test/
+jsontest/
+lantest/
+*.minecraft/
+
+# ---------- 运行时缓存与临时文件 ----------
+bm.json
+mj.json
+*.log
+*.txt.bak
+config.json
+config.backup.json
+
+# ---------- 截图 / 调试产物 ----------
+*.png
+tools/audit/
+final_*.png
+
+# ---------- IDE ----------
+.vs/
+.idea/
+*.user
+*.suo
+*.userprefs
+*.DotSettings.user
+
+# ---------- Windows 保留设备名（误创建的垃圾文件）----------
+nul
+**/nul
+con
+aux
+
+# ---------- 系统 ----------
+Thumbs.db
+desktop.ini
+.DS_Store

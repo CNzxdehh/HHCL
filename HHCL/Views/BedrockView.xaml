@@ -1,0 +1,224 @@
+<UserControl x:Class="HHCL.Views.BedrockView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+             Background="{DynamicResource WindowBgBrush}">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="28,20,24,20" MaxWidth="880">
+
+            <!-- 标题 -->
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                <TextBlock Text="基岩版" Style="{StaticResource H1}" FontSize="22" />
+                <Border Background="{DynamicResource OverlaySoftBrush}" CornerRadius="4" Padding="8,3" Margin="12,2,0,0" VerticalAlignment="Center">
+                    <TextBlock Text="Minecraft for Windows" FontSize="11" Foreground="{DynamicResource TextTertiaryBrush}" />
+                </Border>
+            </StackPanel>
+            <TextBlock Text="在 Windows 上玩基岩版（手机/主机跨平台联机）。需要微软账号已拥有基岩版或试用资格。"
+                       Style="{StaticResource Label}" Margin="0,4,0,18" TextWrapping="Wrap" />
+
+            <!-- 安装状态卡 -->
+            <Border Style="{StaticResource Card}" Padding="18,16" Margin="0,0,0,14">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock x:Name="StateIcon" Text="&#xE74C;" FontFamily="{StaticResource IconFont}" FontSize="16"
+                                   Foreground="{DynamicResource AccentLightBrush}" VerticalAlignment="Center" />
+                        <TextBlock x:Name="StateText" Text="正在检测基岩版…" Style="{StaticResource Body}" Margin="10,0,0,0"
+                                   VerticalAlignment="Center" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                        <Button x:Name="LaunchBtn" Content="启动基岩版" Style="{StaticResource AccentButton}" Height="34"
+                                Width="150" Click="Launch_Click" Visibility="Collapsed" />
+                        <Button x:Name="StoreBtnTop" Content="打开微软商店" Style="{StaticResource GhostButton}" Height="34"
+                                Margin="10,0,0,0" Click="Store_Click" Visibility="Collapsed" />
+                    </StackPanel>
+                    <TextBlock x:Name="StoreInfoText" Text="" Style="{StaticResource Label}" Margin="0,12,0,0"
+                               TextWrapping="Wrap" Opacity="0.85" />
+                    <TextBlock x:Name="VersionListText" Text="" Style="{StaticResource Label}" Margin="0,8,0,0"
+                               TextWrapping="Wrap" Opacity="0.7" Visibility="Collapsed" />
+                </StackPanel>
+            </Border>
+
+            <!-- 存档配置卡 -->
+            <Border Style="{StaticResource Card}" Padding="18,16" Margin="0,0,0,14">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="存档配置" Style="{StaticResource H2}" FontSize="15" />
+                        <Border Background="{DynamicResource OverlaySoftBrush}" CornerRadius="4" Padding="8,3" Margin="10,2,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="像 Java 版的版本档案那样隔离存档" FontSize="11"
+                                       Foreground="{DynamicResource TextTertiaryBrush}" />
+                        </Border>
+                    </StackPanel>
+                    <TextBlock Text="每套配置一个独立目录。启动前把配置应用到游戏目录，游戏退出后自动回收改动，多套存档互不干扰。"
+                               Style="{StaticResource Label}" Margin="0,6,0,0" TextWrapping="Wrap" />
+
+                    <Grid Margin="0,14,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="8" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="8" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <ComboBox x:Name="ProfileBox" Style="{StaticResource FluentComboBox}" Height="32"
+                                  SelectionChanged="ProfileBox_SelectionChanged" />
+                        <Button Grid.Column="2" Content="新建" Style="{StaticResource GhostButton}" Height="32" Width="88"
+                                Click="NewProfile_Click" />
+                        <Button Grid.Column="4" Content="删除" Style="{StaticResource GhostButton}" Height="32" Width="88"
+                                Click="Delete_Click" />
+                    </Grid>
+
+                    <TextBlock x:Name="ProfileInfo" Text="" Style="{StaticResource Label}" Margin="0,10,0,0"
+                               TextWrapping="Wrap" />
+
+                    <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                        <Button x:Name="ApplyBtn" Content="应用到存档目录" Style="{StaticResource AccentButton}" Height="34"
+                                Width="160" Click="Apply_Click" />
+                        <Button x:Name="RenameBtn" Content="重命名" Style="{StaticResource GhostButton}" Height="34"
+                                Width="100" Margin="10,0,0,0" Click="Rename_Click" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- 基岩版 addon 商店 -->
+            <Border Style="{StaticResource Card}" Padding="18,16" Margin="0,0,0,14">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="基岩版模组 / 资源包" Style="{StaticResource H2}" FontSize="15" />
+                        <Border Background="{DynamicResource OverlaySoftBrush}" CornerRadius="4" Padding="8,3" Margin="10,2,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="addon 商店 · CurseForge" FontSize="11" Foreground="{DynamicResource TextTertiaryBrush}" />
+                        </Border>
+                    </StackPanel>
+                    <TextBlock Text="搜到的 addon 会直接装进基岩版的包目录，装完到世界设置里勾选即可生效。"
+                               Style="{StaticResource Label}" Margin="0,6,0,0" TextWrapping="Wrap" />
+
+                    <Grid Margin="0,14,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="8" />
+                            <ColumnDefinition Width="132" />
+                            <ColumnDefinition Width="8" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="AddonSearchBox" Style="{StaticResource FluentTextBox}" Height="32"
+                                 Tag="搜索基岩版 addon…" KeyDown="AddonSearch_KeyDown" />
+                        <ComboBox Grid.Column="2" x:Name="AddonTypeBox" Style="{StaticResource FluentComboBox}" Height="32"
+                                  SelectedIndex="0" SelectionChanged="AddonType_SelectionChanged">
+                            <ComboBoxItem Content="Addons" Tag="addons" />
+                            <ComboBoxItem Content="材质包" Tag="texture-packs" />
+                            <ComboBoxItem Content="光影" Tag="shaders" />
+                            <ComboBoxItem Content="世界" Tag="worlds" />
+                        </ComboBox>
+                        <Button Grid.Column="4" x:Name="AddonSearchBtn" Content="搜索" Style="{StaticResource AccentButton}"
+                                Height="32" Click="AddonSearch_Click" />
+                    </Grid>
+
+                    <TextBlock x:Name="AddonStateText" Text="" Style="{StaticResource Label}" Margin="0,12,0,0"
+                               TextWrapping="Wrap" />
+
+                    <ListBox x:Name="AddonList" Style="{StaticResource FluentListBox}" Visibility="Collapsed"
+                             Margin="0,10,0,0" MaxHeight="320"
+                             SelectionChanged="AddonList_SelectionChanged">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border Padding="10,8" Background="{DynamicResource CardHoverBrush}" CornerRadius="6">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Border Width="36" Height="36" CornerRadius="7" Background="{DynamicResource AccentIconBrush}" VerticalAlignment="Center">
+                                            <Image Source="{Binding IconUrl}" Stretch="UniformToFill" Width="36" Height="36" />
+                                        </Border>
+                                        <StackPanel Grid.Column="1" Margin="10,0,8,0" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Title}" FontSize="13" FontWeight="SemiBold" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                            <TextBlock Text="{Binding Description}" Style="{StaticResource Label}" Margin="0,2,0,0"
+                                                       MaxHeight="32" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" />
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding DownloadsText}" Style="{StaticResource Label}" />
+                                            <TextBlock Text="{Binding Author}" Style="{StaticResource Label}" FontSize="10.5"
+                                                       Margin="0,4,0,0" Foreground="{DynamicResource TextTertiaryBrush}" />
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <Grid x:Name="AddonDetailRow" Margin="0,12,0,0" Visibility="Collapsed">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="12" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock x:Name="AddonDetailText" Text="" Style="{StaticResource Label}" TextWrapping="Wrap" />
+                            <TextBlock x:Name="AddonFileText" Text="" Style="{StaticResource Label}" Margin="0,4,0,0"
+                                       TextWrapping="Wrap" Foreground="{DynamicResource TextTertiaryBrush}" />
+                        </StackPanel>
+                        <Button Grid.Column="2" x:Name="AddonInstallBtn" Content="安装" Style="{StaticResource AccentButton}"
+                                Height="34" Width="130" Click="AddonInstall_Click" />
+                    </Grid>
+
+                    <Grid Margin="0,12,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="12" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Name="AddonHint" Text="没有 API Key 也能用：直接选一个本地下载好的 .mcaddon / .mcpack 文件装进游戏。"
+                                   Style="{StaticResource Label}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                        <Button Grid.Column="2" x:Name="AddonLocalBtn" Content="从本地文件安装…" Style="{StaticResource SubtleButton}"
+                                Height="32" Click="AddonLocal_Click" />
+                    </Grid>
+
+                    <ProgressBar x:Name="AddonBar" Style="{StaticResource FluentProgress}" Height="4" Margin="0,12,0,0"
+                                 Visibility="Collapsed" />
+                </StackPanel>
+            </Border>
+
+            <!-- 下载安装卡 -->
+            <Border Style="{StaticResource Card}" Padding="18,16">
+                <StackPanel>
+                    <TextBlock Text="下载并安装基岩版" Style="{StaticResource H2}" FontSize="15" />
+                    <TextBlock Text="HHCL 会借用你账号的商店授权，直接从微软拉取安装包并注册到本机。"
+                               Style="{StaticResource Label}" Margin="0,6,0,0" TextWrapping="Wrap" />
+
+                    <Grid Margin="0,16,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="12" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Button x:Name="DownloadBtn" Content="下载并安装" Style="{StaticResource AccentButton}" Height="38"
+                                Click="Download_Click" />
+                        <Button x:Name="StoreBtn" Grid.Column="2" Content="打开微软商店" Style="{StaticResource GhostButton}" Height="38"
+                                Width="150" Click="Store_Click" />
+                    </Grid>
+
+                    <ProgressBar x:Name="Bar" Style="{StaticResource FluentProgress}" Height="4" Margin="0,14,0,0"
+                                 Visibility="Collapsed" />
+                    <Grid Margin="0,10,0,0" Visibility="Collapsed" x:Name="ProgressRow">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Name="StageText" Text="" Style="{StaticResource Label}" TextWrapping="Wrap" />
+                        <TextBlock x:Name="RightText" Grid.Column="1" Text="" Style="{StaticResource Label}"
+                                   Foreground="{DynamicResource TextTertiaryBrush}" Margin="12,0,0,0" />
+                    </Grid>
+
+                    <TextBlock x:Name="Hint" Text="" Style="{StaticResource Body}" Margin="0,12,0,0" TextWrapping="Wrap"
+                               Foreground="{DynamicResource TextSecondaryBrush}" />
+
+                    <Button x:Name="CancelBtn" Content="取消" Style="{StaticResource GhostButton}" Height="34"
+                            Width="120" Margin="0,14,0,0" Click="Cancel_Click" Visibility="Collapsed" />
+                </StackPanel>
+            </Border>
+
+            <TextBlock Text="说明：基岩版由微软商店分发并绑定账号授权，HHCL 只是帮你走完下载与安装。若账号没有拥有资格，安装会被系统拒绝，此时用「打开微软商店」走官方渠道即可。"
+                       Style="{StaticResource Label}" Margin="0,16,0,0" Opacity="0.7" TextWrapping="Wrap" FontSize="11.5" />
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
