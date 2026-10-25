@@ -17,7 +17,10 @@
 - `maven.neoforged.net` 不可达 → NeoForge 依赖走 BMCLAPI 镜像。`meta.fabricmc.net` 走代理必超时 → 用 `bmclapi2.bangbang93.com/fabric-meta/v2/versions/loader/{mc}`（备 `bmclapi.bangbang93.com`）。
 - Bash `rm` 被沙箱拦 → 用 Python 删除。`dotnet build` 偶发不重编 → `touch` 源文件。Bash 里别用反引号包中文。
 - 调 PS 用 `-EncodedCommand <base64(UTF16LE)>`，先设 `$ProgressPreference='SilentlyContinue'`，结果用 `VER:` 标记。
-- GitHub API 走 `https://gh-proxy.com/https://api.github.com/...`；`agent-browser eval` 传 >32KB 会超 Windows cmdline 上限 → 改用 git push 直连。
+- GitHub API 走 `https://gh-proxy.com/https://api.github.com/...`；`agent-browser eval` 传 >32KB 会超 Windows cmdline 上限 → 改用 git push 直连。`github.com`/`api.github.com` 直连常 `http=000`，只有 gh-proxy 通；**git 协议通道仍通**（`git ls-remote` 正常）。
+- **git push 会挂起**：仓库没配 github.com 的 credential helper → 走交互提问。绕过：`git -c credential.helper= push "https://x-access-token:<token>@github.com/CNzxdehh/HHCL.git" master:master`。
+- **提交署名**：仓库级 `user.email` 必须是新式 `<数字ID>+<用户名>@users.noreply.github.com`，旧式 `<用户名>@users.noreply.github.com` 会被反查到**同名他人账号**（踩过：提交全署到陌生人 github.com/HHCL 名下，11 个提交 + contributors 显示错人）。修法：`git filter-branch --env-filter` 重写历史（附注 tag 会被重写，**轻量 tag 要手动重建**），代码内容零改动。
+- GitHub token 认证身份是 **`aeroheaven`**（对 `CNzxdehh/HHCL` 有 push 权限，是协作者）。曾有一个 PAT 被硬编码在 `tools/fix_releases_ready.js`（已改 `process.env.GITHUB_TOKEN`）→ **该 token 待用户撤销**。⚠️ 别把 token 明文写进本仓库任何文件，GitHub 推送保护会直接拒绝 push。
 
 ## 启动器红线（改 LaunchBuilder 前必看）
 - 客户端 jar：json 有 `jar` 字段就用它；否则沿 `inheritsFrom` 取**最底层父版本**的 jar，绝不能用 `version.Id`。链上用 `chainIds` 记 id。
