@@ -1,0 +1,51 @@
+HHCL v1.0.0 — Windows 版 Minecraft 启动器
+========================================
+
+## 怎么拿到程序
+
+**夸克网盘**（推荐）：
+
+    链接：https://pan.quark.cn/s/2a54504cc747?pwd=56wz
+    提取码：56wz
+
+里面有两个文件：
+
+· `HHCL启动器.exe`（125.8 MB）—— **完整自包含版，双击即用，不用装 .NET 也不用装 Java**
+· `HHCL启动器.zip`（53.6 MB）—— 同一个程序的压缩包，省流量用
+· `使用说明.txt`
+
+建议用**夸克客户端**（或夸克浏览器）打开链接，保存到本地再解压。
+
+## 运行要求
+
+· Windows 10 1607 及以上（64 位）
+· 玩正版需要**你自己的**微软账号（免费账号即可），启动器只做官方 OAuth 登录
+· 缺 Java 时启动器会提示一键下载 Java
+· 首次启动如提示防火墙，选「允许专用网络」（局域网联机需要）
+
+## 功能
+
+· 多版本管理：原版 + Fabric / Forge / NeoForge / Quilt
+· 联网搜索安装模组、资源包、光影、整合包（中文关键词会自动补搜英文同义词，"小地图"也能搜到 Xaero 小地图）
+· 版本详情页按游戏版本分组，每组可折叠展开
+· 局域网联机：自动读出房间码与直连地址，支持 UDP 广播自动发现同一局域网里的房间
+· 基岩版：可下载安装，支持多存档配置隔离
+· 深色 / 浅色双主题，界面中文，游戏语言自动切简体中文
+
+## 源码
+
+本仓库即完整源码，MIT 协议开源：
+
+    https://github.com/CNzxdehh/HHCL
+
+自己编译需要 .NET 10 SDK：
+
+    dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
+
+想自己编译的话直接用这里的代码就行，不用去网盘拿 exe。
+
+## 说明
+
+HHCL 是第三方启动器，与 Mojang / Microsoft 无隶属关系，未获其官方认可或背书。
+Minecraft 是 Mojang Studios 的商标。本项目不包含、不分发任何 Minecraft 游戏文件，
+游戏文件由启动器从 Mojang 官方源获取。

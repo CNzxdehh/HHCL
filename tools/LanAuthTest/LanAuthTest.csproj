@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <AssemblyName>LanAuthTest</AssemblyName>
+    <RootNamespace>LanAuthTest</RootNamespace>
+    <EnableDefaultCompileItems>true</EnableDefaultCompileItems>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- 直接链接真实实现来测，保证测的就是上线的那份代码 -->
+    <Compile Include="..\..\HHCL\Core\LanAuth.cs" Link="LanAuth.cs" />
+  </ItemGroup>
+
+</Project>

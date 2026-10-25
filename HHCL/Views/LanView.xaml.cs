@@ -19,6 +19,8 @@ namespace HHCL.Views
     {
         private CancellationTokenSource _cts;
         private VersionEntry _version;
+        private readonly LanAuth.Server _authServer = new();
+        private readonly LanAuth.Client _authClient = new();
 
         public LanView()
         {
@@ -69,6 +71,34 @@ namespace HHCL.Views
             ShareText.Text = $"我在局域网里的地址是 {best}。同一个 WiFi 下，把上面复制到的直连地址发给我就行。";
         }
 
+        // ==================== 访问密码 ====================
+
+        private void PasswordCheck_Changed(object sender, RoutedEventArgs e)
+        {
+            var on = PasswordCheck.IsChecked == true;
+            PasswordBox.IsEnabled = on;
+            RandomPwdBtn.IsEnabled = on;
+            if (on && string.IsNullOrEmpty(PasswordBox.Text))
+            {
+                PasswordBox.Text = RandomPassword();
+            }
+        }
+
+        private void RandomPwd_Click(object sender, RoutedEventArgs e)
+        {
+            PasswordBox.Text = RandomPassword();
+        }
+
+        private static string RandomPassword()
+        {
+            var rnd = new Random();
+            return rnd.Next(100000, 999999).ToString();
+        }
+
+        /// <summary>当前生效的密码（没开密码时返回空）。</summary>
+        private string CurrentPassword =>
+            (PasswordCheck.IsChecked == true ? (PasswordBox.Text ?? "").Trim() : "");
+
         // ==================== 主机 ====================
 
         private async void HostStart_Click(object sender, RoutedEventArgs e)
@@ -102,10 +132,29 @@ namespace HHCL.Views
                 var port = LanMultiplayer.DetectLanPort(workDir);
                 if (port.HasValue)
                 {
+                    // 开了密码 → 在本机起一个带认证的代理端口，朋友只能从代理进
+                    var pwd = CurrentPassword;
                     var room = LanMultiplayer.MakeRoom(port.Value);
+                    var connectAddr = room.Address;
+                    var needProxy = !string.IsNullOrEmpty(pwd);
+
+                    if (needProxy)
+                    {
+                        if (!_authServer.Start(port.Value, pwd))
+                        {
+                            Dispatcher.Invoke(() => RoomStateText.Text = "起代理端口失败（可能端口都被占了）。");
+                            return;
+                        }
+                        var ip = LanMultiplayer.BestIPv4();
+                        connectAddr = string.IsNullOrEmpty(ip)
+                            ? _authServer.Port.ToString()
+                            : $"{ip}:{_authServer.Port}";
+                        Log.Write($"lan room with password, proxy on {_authServer.Port}");
+                    }
+
                     // 开始应答局域网房间探测，朋友就能在「加入房间」里搜到我们
                     try { LanDiscovery.StartResponder(port.Value); } catch (Exception ex) { Log.Write("lan responder: " + ex.Message); }
-                    Dispatcher.Invoke(() => ShowRoom(room));
+                    Dispatcher.Invoke(() => ShowRoom(room, connectAddr, pwd));
                     return;
                 }
                 await Task.Delay(1000);
@@ -113,14 +162,29 @@ namespace HHCL.Views
             Dispatcher.Invoke(() => RoomStateText.Text = "等了 5 分钟还没检测到房间。确认已在游戏里「开放到局域网」。");
         }
 
-        private void ShowRoom(LanRoom room)
+        private void ShowRoom(LanRoom room, string connectAddr, string password)
         {
             RoomBox.Visibility = Visibility.Visible;
             RoomCodeText.Text = room.Code;
-            RoomAddressText.Text = room.Address;
-            ShareText.Text = $"我在局域网里的地址是 {room.Address}，房间码 {room.Code}。"
-                           + "同一个 WiFi 下，把这个地址发给你，你在「加入房间」里填进去就能连上。";
-            RoomStateText.Text = $"房间已开（{room.FoundAt} 检测到）。";
+            RoomAddressText.Text = connectAddr;
+
+            var withPwd = !string.IsNullOrEmpty(password);
+            PasswordRow.Visibility = withPwd ? Visibility.Visible : Visibility.Collapsed;
+            CopyPwdBtn.Visibility = withPwd ? Visibility.Visible : Visibility.Collapsed;
+            RoomPasswordText.Text = password;
+
+            if (withPwd)
+            {
+                ShareText.Text = $"在同一个 WiFi / 局域网下，把这个地址发给你：{connectAddr}，房间密码 {password}。"
+                               + "你在「加入房间」里填地址和密码就能进来。";
+                RoomStateText.Text = $"房间已开（{room.FoundAt} 检测到），已开启访问密码。";
+            }
+            else
+            {
+                ShareText.Text = $"我在局域网里的地址是 {connectAddr}，房间码 {room.Code}。"
+                               + "同一个 WiFi 下，把这个地址发给你，你在「加入房间」里填进去就能连上。";
+                RoomStateText.Text = $"房间已开（{room.FoundAt} 检测到）。";
+            }
             MainWindow.Instance?.SetStatus("局域网房间已就绪");
         }
 
@@ -156,6 +220,16 @@ namespace HHCL.Views
             catch (Exception ex) { RoomStateText.Text = "复制失败：" + ex.Message; }
         }
 
+        private void CopyPwd_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Clipboard.SetText(RoomPasswordText.Text);
+                RoomStateText.Text = "密码已复制，发给朋友。";
+            }
+            catch (Exception ex) { RoomStateText.Text = "复制失败：" + ex.Message; }
+        }
+
         // ==================== 客机 ====================
 
         private void Paste_Click(object sender, RoutedEventArgs e)
@@ -164,6 +238,16 @@ namespace HHCL.Views
             {
                 var t = Clipboard.ContainsText() ? Clipboard.GetText().Trim() : "";
                 if (t.Length > 0) AddrBox.Text = t;
+            }
+            catch { }
+        }
+
+        private void PastePwd_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var t = Clipboard.ContainsText() ? Clipboard.GetText().Trim() : "";
+                if (t.Length > 0) JoinPwdBox.Text = t;
             }
             catch { }
         }
@@ -233,15 +317,57 @@ namespace HHCL.Views
                 return;
             }
 
+            var pwd = (JoinPwdBox.Text ?? "").Trim();
             var addr = $"{host}:{port}";
+
+            // 有密码 → 走本地代理：先跟主机校验密码，通过了才把游戏流量转过去
+            if (!string.IsNullOrEmpty(pwd))
+            {
+                if (!_authClient.Start(host, port, pwd))
+                {
+                    JoinStateText.Text = "起本地代理失败。";
+                    return;
+                }
+                addr = $"127.0.0.1:{_authClient.LocalPort}";
+            }
+
             var session = AppState.Current.Launch(v, addr, out var err);
             if (session == null)
             {
+                _authClient.Stop();
                 JoinStateText.Text = "启动失败：" + err;
                 return;
             }
-            JoinStateText.Text = $"已启动，正在连 {addr}…（如果连不上，确认两边在同一个局域网、主机的防火墙放行了该端口）";
-            MainWindow.Instance?.SetStatus($"正在连接 {addr}");
+
+            if (!string.IsNullOrEmpty(pwd))
+            {
+                JoinStateText.Text = $"已启动，正在用密码连接 {host}:{port}…（密码错的话会连不上）";
+                MainWindow.Instance?.SetStatus($"正在用密码连接 {host}:{port}");
+                WatchAuthResult();
+            }
+            else
+            {
+                JoinStateText.Text = $"已启动，正在连 {addr}…（如果连不上，确认两边在同一个局域网、主机的防火墙放行了该端口）";
+                MainWindow.Instance?.SetStatus($"正在连接 {addr}");
+            }
+        }
+
+        /// <summary>盯一下密码校验结果，好告诉用户到底成没成。</summary>
+        private async void WatchAuthResult()
+        {
+            for (int i = 0; i < 60; i++)
+            {
+                await Task.Delay(1000);
+                var r = _authClient.LastResult;
+                if (string.IsNullOrEmpty(r)) continue;
+                Dispatcher.Invoke(() =>
+                {
+                    if (r.Contains("密码不对")) JoinStateText.Text = "密码不对，连不上。跟朋友核对一下密码。";
+                    else if (r.Contains("已通过")) JoinStateText.Text = "密码验证通过，正在进入房间…";
+                    else JoinStateText.Text = "连接失败：" + r;
+                });
+                if (r.Contains("密码不对") || r.Contains("已通过")) return;
+            }
         }
     }
 }

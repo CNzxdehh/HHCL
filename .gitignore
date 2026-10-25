@@ -24,6 +24,9 @@ mj.json
 config.json
 config.backup.json
 
+# ---------- 上传 GitHub 用的临时数据 ----------
+tools/gh_payload.json
+
 # ---------- 截图 / 调试产物 ----------
 *.png
 tools/audit/
@@ -47,3 +50,7 @@ aux
 Thumbs.db
 desktop.ini
 .DS_Store
+
+# ---------- 联机密码自测项目（构建产物）----------
+tools/LanAuthTest/bin/
+tools/LanAuthTest/obj/
