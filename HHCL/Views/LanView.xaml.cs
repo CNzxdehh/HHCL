@@ -78,10 +78,23 @@ namespace HHCL.Views
             var on = PasswordCheck.IsChecked == true;
             PasswordBox.IsEnabled = on;
             RandomPwdBtn.IsEnabled = on;
-            if (on && string.IsNullOrEmpty(PasswordBox.Text))
-            {
-                PasswordBox.Text = RandomPassword();
-            }
+            // 不自动填默认密码了，空着让用户自己填（想要随机就点「随机」）
+            if (!on) PasswordBox.Clear();
+        }
+
+        /// <summary>把框里可能混进来的空白字符去掉，光标停在末尾。</summary>
+        private void PasswordBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (sender is not TextBox tb) return;
+            var raw = tb.Text ?? "";
+            var clean = raw.Trim();
+            // 中间也不留空白，避免"看着有空格又删不掉"
+            clean = clean.Replace(" ", "").Replace("\t", "").Replace("\r", "").Replace("\n", "");
+            if (clean == raw) return;
+            var pos = tb.SelectionStart;
+            tb.Text = clean;
+            tb.SelectionStart = Math.Min(pos, clean.Length);
+            tb.SelectionLength = 0;
         }
 
         private void RandomPwd_Click(object sender, RoutedEventArgs e)
