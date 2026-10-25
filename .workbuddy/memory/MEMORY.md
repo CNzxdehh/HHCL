@@ -19,8 +19,21 @@
 - 调 PS 用 `-EncodedCommand <base64(UTF16LE)>`，先设 `$ProgressPreference='SilentlyContinue'`，结果用 `VER:` 标记。
 - GitHub API 走 `https://gh-proxy.com/https://api.github.com/...`；`agent-browser eval` 传 >32KB 会超 Windows cmdline 上限 → 改用 git push 直连。`github.com`/`api.github.com` 直连常 `http=000`，只有 gh-proxy 通；**git 协议通道仍通**（`git ls-remote` 正常）。
 - **git push 会挂起**：仓库没配 github.com 的 credential helper → 走交互提问。绕过：`git -c credential.helper= push "https://x-access-token:<token>@github.com/CNzxdehh/HHCL.git" master:master`。
-- **提交署名**：仓库级 `user.email` 必须是新式 `<数字ID>+<用户名>@users.noreply.github.com`，旧式 `<用户名>@users.noreply.github.com` 会被反查到**同名他人账号**（踩过：提交全署到陌生人 github.com/HHCL 名下，11 个提交 + contributors 显示错人）。修法：`git filter-branch --env-filter` 重写历史（附注 tag 会被重写，**轻量 tag 要手动重建**），代码内容零改动。
-- GitHub token 认证身份是 **`aeroheaven`**（对 `CNzxdehh/HHCL` 有 push 权限，是协作者）。曾有一个 PAT 被硬编码在 `tools/fix_releases_ready.js`（已改 `process.env.GITHUB_TOKEN`）→ **该 token 待用户撤销**。⚠️ 别把 token 明文写进本仓库任何文件，GitHub 推送保护会直接拒绝 push。
+- **GitHub 身份/权限判定铁律**：**绝不能信 gh-proxy.com 返回的 `/user` 身份和 `/repos` 的 `permissions` 字段**——
+  它会用自己共享池的 token 替换请求身份（同一 token 一会儿报 `aeroheaven` 一会儿报 `XxXx…`）。
+  必须**直连 + `Authorization: Bearer` 头**：`curl --resolve "api.github.com:443:20.26.156.210" ...`
+  （可用 IP：`20.26.156.210`/`20.201.28.148`/`20.27.177.116`；DNS 被污染但 TLS 通，所以 `--resolve` 有效。
+  `?access_token=` 在直连下返回 401，**必须用 Bearer 头**）。再用 Settings 网页界面交叉验证。
+- 提交署名：仓库级 `user.email` 必须用新式 `<数字ID>+<用户名>@users.noreply.github.com`，
+  旧式 `<用户名>@users.noreply.github.com` 会被反查到**同名他人账号**（踩过：提交全署到陌生人 github.com/HHCL 名下）。
+  修法：`git filter-branch --env-filter` 重写历史（附注 tag 会被重写，**轻量 tag 要手动重建**）。
+- **`CNzxdehh/HHCL` 协作者名单只有用户自己**（teams/invitations/deploy keys/GitHub Apps 全空，事件流 actor 全是 CNzxdehh）。
+  `aeroheaven`(id=282307982) 和 `github.com/HHCL`(id=33567356) 都是**与用户无关的第三方**，对仓库零权限。
+- 用户的 classic PAT `ghp_sz9OG…` 是**用户自己的**（scopes 全量：admin:org/repo/delete_repo/workflow…），
+  曾硬编码在 `tools/fix_releases_ready.js`（已改 `process.env.GITHUB_TOKEN`）→ **该 token 待用户撤销**。
+  ⚠️ 别把 token 明文写进本仓库任何文件，GitHub 推送保护会直接拒绝 push。
+- 删协作者 = owner 或 admin 权限；**个人仓库的协作者没有自助退出 API**。
+  GraphQL `Mutation` 里**没有 `removeCollaborator`**（只有 `removeOutsideCollaborator`，需 organizationId）。
 
 ## 启动器红线（改 LaunchBuilder 前必看）
 - 客户端 jar：json 有 `jar` 字段就用它；否则沿 `inheritsFrom` 取**最底层父版本**的 jar，绝不能用 `version.Id`。链上用 `chainIds` 记 id。
