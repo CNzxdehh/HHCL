@@ -30,7 +30,6 @@ namespace HHCL.Views
         public void OnActivated()
         {
             LoadVersions();
-            UpdateLocalIpHint();
         }
 
         private void LoadVersions()
@@ -61,14 +60,6 @@ namespace HHCL.Views
             var host = (sender as System.Windows.Controls.Primitives.ToggleButton)?.Name == "TabHost";
             HostPanel.Visibility = host ? Visibility.Visible : Visibility.Collapsed;
             JoinPanel.Visibility = host ? Visibility.Collapsed : Visibility.Visible;
-        }
-
-        private void UpdateLocalIpHint()
-        {
-            var ips = LanMultiplayer.LocalIPv4();
-            var best = LanMultiplayer.BestIPv4();
-            if (string.IsNullOrEmpty(best)) return;
-            ShareText.Text = $"我在局域网里的地址是 {best}。同一个 WiFi 下，把上面复制到的直连地址发给我就行。";
         }
 
         // ==================== 访问密码 ====================
@@ -186,6 +177,7 @@ namespace HHCL.Views
             CopyPwdBtn.Visibility = withPwd ? Visibility.Visible : Visibility.Collapsed;
             RoomPasswordText.Text = password;
 
+            ShareBox.Visibility = Visibility.Visible;
             if (withPwd)
             {
                 ShareText.Text = $"在同一个 WiFi / 局域网下，把这个地址发给你：{connectAddr}，房间密码 {password}。"
