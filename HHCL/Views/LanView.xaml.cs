@@ -237,25 +237,7 @@ namespace HHCL.Views
 
         // ==================== 客机 ====================
 
-        private void Paste_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                var t = Clipboard.ContainsText() ? Clipboard.GetText().Trim() : "";
-                if (t.Length > 0) AddrBox.Text = t;
-            }
-            catch { }
-        }
 
-        private void PastePwd_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                var t = Clipboard.ContainsText() ? Clipboard.GetText().Trim() : "";
-                if (t.Length > 0) JoinPwdBox.Text = t;
-            }
-            catch { }
-        }
 
         /// <summary>扫描同一局域网里能连的房间。</summary>
         private async void Scan_Click(object sender, RoutedEventArgs e)

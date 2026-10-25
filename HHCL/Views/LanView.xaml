@@ -135,14 +135,11 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="房间密码" Style="{StaticResource Label}" VerticalAlignment="Center" />
                     <TextBox Grid.Column="1" x:Name="JoinPwdBox" Style="{StaticResource FluentTextBox}" Height="32"
                              Margin="12,0,0,0" Tag="请填入密码" MaxLength="32" Width="220"
                              TextChanged="InputBox_TextChanged" />
-                    <Button Grid.Column="2" x:Name="JoinPwdCopyBtn" Content="粘贴密码" Style="{StaticResource GhostButton}"
-                            Height="32" Width="92" Margin="10,0,0,0" Click="PastePwd_Click" />
                 </Grid>
                 <TextBlock Style="{StaticResource Label}" Margin="0,6,0,0" TextWrapping="Wrap"
                            Text="朋友开了访问密码时才需要填；密码由他那边校验，填错连不上。" />
@@ -151,13 +148,10 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="游戏版本" Style="{StaticResource Label}" VerticalAlignment="Center" />
                     <ComboBox Grid.Column="1" x:Name="JoinVersionBox" Style="{StaticResource FluentComboBox}" Height="32"
                               Margin="12,0,0,0" Width="260" HorizontalAlignment="Left" />
-                    <Button Grid.Column="2" x:Name="PasteBtn" Content="粘贴" Style="{StaticResource GhostButton}"
-                            Height="32" Width="80" Margin="10,0,0,0" Click="Paste_Click" />
                 </Grid>
 
                 <!-- 自动发现附近房间：不用手抄 IP -->

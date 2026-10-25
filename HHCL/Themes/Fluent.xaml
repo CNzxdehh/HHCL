@@ -277,6 +277,8 @@
         <Setter Property="BorderBrush" Value="{DynamicResource StrokeBrush}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
+        <!-- 文字必须贴左边：默认对齐会让输入的内容居中，前面空一大块 -->
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
         <!-- 别让输入框在 Grid 的 * 列里撑满一整行：右边空一大片很怪 -->
         <Setter Property="MaxWidth" Value="400" />
         <Setter Property="HorizontalAlignment" Value="Left" />
@@ -290,6 +292,7 @@
                                        VerticalAlignment="Center" Foreground="{DynamicResource TextTertiaryBrush}"
                                        FontSize="{TemplateBinding FontSize}" IsHitTestVisible="False" Visibility="Collapsed" />
                             <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}" VerticalAlignment="Center"
+                                          HorizontalAlignment="Left" HorizontalContentAlignment="Left"
                                           HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" />
                         </Grid>
                     </Border>
