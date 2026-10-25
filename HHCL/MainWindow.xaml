@@ -123,7 +123,7 @@
                                    Margin="8,0,0,0" VerticalAlignment="Center" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                        <TextBlock x:Name="StatusVersion" Text="HHCL 1.0.0" FontSize="11.5" Foreground="{DynamicResource TextTertiaryBrush}" />
+                        <TextBlock x:Name="StatusVersion" FontSize="11.5" Foreground="{DynamicResource TextTertiaryBrush}" />
                         <TextBlock Text="·" FontSize="11.5" Foreground="{DynamicResource TextTertiaryBrush}" Margin="8,0" />
                         <TextBlock x:Name="StatusJava" Text="Java -" FontSize="11.5" Foreground="{DynamicResource TextTertiaryBrush}" />
                     </StackPanel>

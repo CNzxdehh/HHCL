@@ -10,10 +10,10 @@ namespace HHCL.Core
     public static class AppInfo
     {
         public const string Name = "HHCL";
-        public const string Version = "1.0";
+        public const string Version = "1.1";
 
         /// <summary>联系方式。留空则不带在 User-Agent 里（建议填上）。</summary>
-        public const string Contact = "";
+        public const string Contact = "https://github.com/CNzxdehh/HHCL";
 
         /// <summary>对外请求用的 User-Agent。</summary>
         public static string UserAgent

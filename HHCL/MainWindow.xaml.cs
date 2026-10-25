@@ -27,6 +27,9 @@ namespace HHCL
             InitializeComponent();
             Instance = this;
 
+            // 状态栏版本号跟 AppInfo 走，升级只要改 AppInfo.Version 一处
+            StatusVersion.Text = $"{Core.AppInfo.Name} {Core.AppInfo.Version}";
+
             var cfg = AppState.Current.Config;
             if (cfg.WindowW >= MinWidth && cfg.WindowH >= MinHeight)
             {
