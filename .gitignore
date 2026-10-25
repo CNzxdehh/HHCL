@@ -26,6 +26,11 @@ config.backup.json
 
 # ---------- 上传 GitHub 用的临时数据 ----------
 tools/gh_payload.json
+*.json.bak
+
+# ---------- 本机备份 / 临时查询产物 ----------
+.git_backup*/
+hhcl_git_backup_*/
 
 # ---------- 截图 / 调试产物 ----------
 *.png
