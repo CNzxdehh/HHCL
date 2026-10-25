@@ -277,6 +277,9 @@
         <Setter Property="BorderBrush" Value="{DynamicResource StrokeBrush}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
+        <!-- 别让输入框在 Grid 的 * 列里撑满一整行：右边空一大片很怪 -->
+        <Setter Property="MaxWidth" Value="400" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TextBox">

@@ -58,8 +58,8 @@
                     <CheckBox x:Name="PasswordCheck" Grid.Column="0" Content="访问密码" VerticalAlignment="Center"
                               Checked="PasswordCheck_Changed" Unchecked="PasswordCheck_Changed" />
                     <TextBox Grid.Column="1" x:Name="PasswordBox" Style="{StaticResource FluentTextBox}" Height="32"
-                             Margin="12,0,0,0" Tag="请填入密码" MaxLength="32" IsEnabled="False"
-                             TextChanged="PasswordBox_TextChanged" />
+                             Margin="12,0,0,0" Tag="请填入密码" MaxLength="32" IsEnabled="False" Width="220"
+                             TextChanged="InputBox_TextChanged" />
                     <Button Grid.Column="2" x:Name="RandomPwdBtn" Content="随机" Style="{StaticResource GhostButton}"
                             Height="32" Width="76" Margin="10,0,0,0" IsEnabled="False" Click="RandomPwd_Click" />
                 </Grid>
@@ -125,7 +125,8 @@
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="直连地址" Style="{StaticResource Label}" VerticalAlignment="Center" />
                     <TextBox Grid.Column="1" x:Name="AddrBox" Style="{StaticResource FluentTextBox}" Height="32"
-                             Margin="12,0,0,0" Tag="例如 192.168.1.23:51234" />
+                             Margin="12,0,0,0" Tag="例如 192.168.1.23:51234" Width="300"
+                             TextChanged="InputBox_TextChanged" />
                     <Button Grid.Column="2" x:Name="JoinBtn" Content="直连进入" Style="{StaticResource AccentButton}"
                             Height="32" Width="120" Margin="10,0,0,0" Click="Join_Click" />
                 </Grid>
@@ -138,8 +139,8 @@
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="房间密码" Style="{StaticResource Label}" VerticalAlignment="Center" />
                     <TextBox Grid.Column="1" x:Name="JoinPwdBox" Style="{StaticResource FluentTextBox}" Height="32"
-                             Margin="12,0,0,0" Tag="请填入密码" MaxLength="32"
-                             TextChanged="PasswordBox_TextChanged" />
+                             Margin="12,0,0,0" Tag="请填入密码" MaxLength="32" Width="220"
+                             TextChanged="InputBox_TextChanged" />
                     <Button Grid.Column="2" x:Name="JoinPwdCopyBtn" Content="粘贴密码" Style="{StaticResource GhostButton}"
                             Height="32" Width="92" Margin="10,0,0,0" Click="PastePwd_Click" />
                 </Grid>

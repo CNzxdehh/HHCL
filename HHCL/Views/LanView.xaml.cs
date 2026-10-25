@@ -74,7 +74,7 @@ namespace HHCL.Views
         }
 
         /// <summary>把框里可能混进来的空白字符去掉，光标停在末尾。</summary>
-        private void PasswordBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void InputBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (sender is not TextBox tb) return;
             var raw = tb.Text ?? "";
